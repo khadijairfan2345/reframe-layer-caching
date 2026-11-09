@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--
+  Rotating Strip Refresh explainer (CS 2420 · Team 18)
+  HOW TO EDIT
+  - Open this file in any editor (VS Code), save, then refresh it in a browser.
+  - Text: edit the words inside the <section> blocks below (sections 1-5).
+  - Comparison table: the <table> in section 1. Next-tests table: the <table> in section 5.
+  - Simulation numbers: in the <script> at the bottom, HEAD / DEEP (compute per frame),
+    MARGIN (border rows per strip), and S.N (periodic refresh interval).
+  - Schedule grids in section 5: the weights w = [...] (how fast each strip changes), K (max age).
+  - Colors and fonts: the :root block at the top of <style>.
+-->
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Rotating Strip Refresh</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one reading column; the simulator breaks wider into a 3-panel instrument row */
+:root{
+  --bg:#f3f4f6; --panel:#ffffff; --ink:#18202c; --muted:#5b6575; --line:#d9dde4; --soft:#eceef2;
+  --cached:#3a6ea5; --refresh:#e07a2f; --refresh-soft:rgba(224,122,47,.16); --cached-soft:rgba(58,110,165,.14);
+  --sans:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12161d; --panel:#1a2029; --ink:#e7eaf0; --muted:#9aa4b3; --line:#2c3441; --soft:#222a35;
+  --cached:#6c9fd6; --refresh:#f0954f; --refresh-soft:rgba(240,149,79,.2); --cached-soft:rgba(108,159,214,.18); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161d; --panel:#1a2029; --ink:#e7eaf0; --muted:#9aa4b3; --line:#2c3441; --soft:#222a35;
+  --cached:#6c9fd6; --refresh:#f0954f; --refresh-soft:rgba(240,149,79,.2); --cached-soft:rgba(108,159,214,.18); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:32px 64px}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+h1{font-size:clamp(28px,4vw,40px);line-height:1.15;margin:0 0 10px;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:22px;margin:0 0 6px;text-wrap:balance}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+p{margin:0;max-width:68ch}
+.lead{font-size:17px;color:var(--muted)}
+section{display:flex;flex-direction:column;gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px}
+.note{border-left:0;background:var(--cached-soft);border-radius:8px;padding:12px 16px;max-width:none}
+.note strong{color:var(--ink)}
+.tablewrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:11px 14px;border-bottom:1px solid var(--line)}
+thead th{font-size:12.5px;font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--soft)}
+tbody th{font-weight:600;white-space:nowrap;color:var(--muted);font-size:13px}
+tr:last-child td,tr:last-child th{border-bottom:0}
+td.now{background:var(--cached-soft)}
+.svgwrap{overflow-x:auto}
+svg text{font-family:var(--sans)}
+.legend{display:flex;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:14px;height:14px;border-radius:3px;display:inline-block}
+/* U-Net svg states */
+.lay rect.box{fill:var(--panel);stroke:var(--line);stroke-width:1.5}
+.lay text{fill:var(--muted);font-size:12px}
+.lay text.nm{fill:var(--ink);font-size:13px;font-weight:600}
+.lay rect.band{fill:var(--refresh);opacity:0}
+.head-on .head rect.box{fill:var(--cached-soft);stroke:var(--cached)}
+.deep-full .deep rect.box{fill:var(--refresh-soft);stroke:var(--refresh)}
+.deep-strip .deep rect.box{stroke:var(--refresh)}
+.deep-strip .deep rect.band{opacity:.45}
+.deep-idle .deep rect.box{fill:var(--soft);stroke:var(--line)}
+.deep-idle .deep text{opacity:.55}
+.arrow{stroke:var(--muted);stroke-width:1.4;fill:none}
+.skip{stroke:var(--muted);stroke-width:1.2;fill:none;stroke-dasharray:4 4;opacity:.8}
+.cachechip rect{fill:var(--cached);}
+.cachechip text{fill:#fff;font-size:11px;font-weight:600;font-family:var(--mono)}
+.lbl{fill:var(--muted);font-size:11.5px}
+.lblstrong{fill:var(--ink);font-size:12px;font-weight:600}
+/* simulator */
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}
+.seg button{font:inherit;font-size:14px;border:0;background:transparent;color:var(--ink);padding:8px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+.seg button:disabled{opacity:.4;cursor:not-allowed}
+.btn{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:8px 14px;border-radius:8px;cursor:pointer}
+.btn.primary{background:var(--refresh);border-color:var(--refresh);color:#fff;font-weight:600}
+button:focus-visible{outline:2px solid var(--cached);outline-offset:2px}
+.ctrl-label{font-size:12.5px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;margin-right:6px}
+.panels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:820px){.panels{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.panel h3{margin:0;font-size:14px}
+.panel p{font-size:13px;color:var(--muted)}
+canvas{width:100%;max-width:300px;aspect-ratio:1/1;border-radius:6px;display:block;background:var(--soft);align-self:center}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:700px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat .k{font-size:12px;color:var(--muted)}
+.stat .v{font-family:var(--mono);font-size:22px;font-variant-numeric:tabular-nums}
+.stat .v small{font-size:13px;color:var(--muted)}
+.chart text{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .bh{fill:var(--cached)}
+.chart .br{fill:var(--refresh)}
+.chart .cur{fill:none;stroke:var(--ink);stroke-width:1.5}
+.whatnow{font-size:14px;min-height:3em}
+.code{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.code{grid-template-columns:minmax(0,1fr)}}
+a{color:var(--cached)}
+pre{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.6}
+pre .c{color:var(--muted)}
+pre .o{color:var(--refresh);font-weight:500}
+.codehead{font-size:13px;font-weight:600;margin-bottom:6px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">CS 2420 · Team 18 · Flat-Latency Caching</p>
+    <h1>How rotating strip refresh works</h1>
+    <p class="lead">A walkthrough of the network we cache, what we tested so far, and a frame-by-frame simulation of periodic refresh vs. refreshing one strip per frame.</p>
+  </header>
+
+  <section>
+    <div>
+      <p class="eyebrow">1 · What we tested vs. what comes next</p>
+      <h2>Our testbed is ReFrame's image-composition benchmark</h2>
+    </div>
+    <p class="note"><strong>This is not a diffusion model.</strong> In ReFrame and in our test, a "step" is one video frame passing through the network once. Diffusion only matters to us as the source of related caching ideas (EVO, dLLM-Cache, ToCa).</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th></th><th>ReFrame's benchmark (the baseline)</th><th>Our first test (Nov 9, done)</th><th>Our method on the benchmark (the goal)</th></tr></thead>
+        <tbody>
+          <tr><th>Task</th><td>Image composition for AR: place a virtual object into real camera video</td><td class="now">None: a timing test only</td><td>Image composition, same as the baseline</td></tr>
+          <tr><th>Network</th><td>Implicit Depth network, with ReFrame's caching added</td><td class="now">ReFrame's demo U-Net: 8 blocks (3 down, bottleneck, 3 up, head), 7.7 million learned numbers</td><td>Same Implicit Depth network</td></tr>
+          <tr><th>Weights</th><td>The authors' pretrained weights</td><td class="now">Random, untrained (as in ReFrame's demo)</td><td>The same pretrained weights, no retraining</td></tr>
+          <tr><th>Input</th><td>Real camera video (their Garden Chair example)</td><td class="now">200 synthetic 512×512 frames: soft blobs drifting slowly</td><td>The same real video</td></tr>
+          <tr><th>Cache refresh</th><td>ReFrame's periodic full refresh</td><td class="now">Periodic vs. chain split vs. 4 and 8 strips</td><td>Rotating strips and priority rotation vs. ReFrame's periodic refresh</td></tr>
+          <tr><th>One step</th><td>One camera frame</td><td class="now">One frame</td><td>One camera frame</td></tr>
+          <tr><th>Measured</th><td>Per-frame latency, FLIP vs. the uncached output</td><td class="now">Per-frame latency; drift as a stand-in for accuracy</td><td>p95 / max latency and FLIP, at the same total refresh work</td></tr>
+          <tr><th>Hardware</th><td>NVIDIA GPU (cloud)</td><td class="now">Mac GPU (MPS); p99 and max are noisy</td><td>NVIDIA GPU (cloud)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Our first test ran every layer of ReFrame's demo U-Net at full 512×512 size, so its timing results are meaningful. Its accuracy number is only a stand-in; real accuracy comes from the image-composition benchmark, where we keep the authors' trained weights and change only which parts of the cache get recomputed each frame.</p>
+  </section>
+
+  <section>
+    <div>
+      <p class="eyebrow">2 · Inside the U-Net</p>
+      <h2>The deep path is cached; the head runs every frame</h2>
+    </div>
+    <p>The network shrinks the frame to understand the big picture, then grows it back. Numbers show image size and feature channels at each layer. ReFrame saves the output of the deep path (<span style="font-family:var(--mono)">u1</span>, a 512×512×64 array) and reuses it on cheap frames. The head (blue) handles fine detail and runs every frame.</p>
+    <div class="card svgwrap">
+      <svg id="unet" class="head-on deep-full" viewBox="0 0 760 420" role="img" aria-label="U-Net diagram: the head layers run every frame, the deep path output is cached" style="min-width:640px;width:100%;height:auto">
+        <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>
+      </svg>
+    </div>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--cached)"></i>Head: runs every frame (23% of the compute)</span>
+      <span><i class="sw" style="background:var(--refresh)"></i>Deep path: what a refresh recomputes (77%)</span>
+      <span><i class="sw" style="border:1.5px dashed var(--muted)"></i>Skip connection: passes detail across</span>
+    </div>
+  </section>
+
+  <section>
+    <div>
+      <p class="eyebrow">3 · Simulation</p>
+      <h2>Step through frames and watch the cache</h2>
+    </div>
+    <p>Each click of "Next frame" sends one frame through the network. Compare how the cost of each frame and the age of the cache change between the two methods.</p>
+    <div class="controls">
+      <span><span class="ctrl-label">Method</span>
+        <span class="seg" role="group" aria-label="Method">
+          <button id="m-per" aria-pressed="false">Periodic (ReFrame, every 5)</button>
+          <button id="m-rot" aria-pressed="true">Rotating strips</button>
+        </span></span>
+      <span><span class="ctrl-label">Strips</span>
+        <span class="seg" role="group" aria-label="Number of strips">
+          <button id="g4" aria-pressed="false">4</button>
+          <button id="g8" aria-pressed="true">8</button>
+          <button id="g16" aria-pressed="false">16</button>
+        </span></span>
+      <span style="display:inline-flex;gap:8px">
+        <button class="btn primary" id="next">Next frame</button>
+        <button class="btn" id="play">Play</button>
+        <button class="btn" id="reset">Reset</button>
+      </span>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="k">Frame</div><div class="v" id="s-frame">0</div></div>
+      <div class="stat"><div class="k">This frame's cost</div><div class="v" id="s-cost">0<small>%</small></div></div>
+      <div class="stat"><div class="k">Slowest frame (worst case)</div><div class="v" id="s-max">0<small>%</small></div></div>
+      <div class="stat"><div class="k">Oldest part of the cache</div><div class="v" id="s-age">0<small> frames</small></div></div>
+    </div>
+
+    <div class="panels">
+      <div class="panel">
+        <h3>Current frame (input)</h3>
+        <canvas id="cv-frame" width="300" height="300" aria-label="Current input frame with the strip being recomputed highlighted"></canvas>
+        <p>Orange band: the rows the deep path recomputes this frame. The lighter edge is the extra border of context each strip needs.</p>
+      </div>
+      <div class="panel">
+        <h3>What the cache holds</h3>
+        <canvas id="cv-cache" width="300" height="300" aria-label="Cache contents shown as the frame each strip came from, with strip ages"></canvas>
+        <p>Each strip shows the frame it was computed from. Numbers give its age in frames. Misaligned blobs between strips are the staleness the head has to live with.</p>
+      </div>
+      <div class="panel">
+        <h3>Layers running this frame</h3>
+        <svg id="mini" viewBox="0 0 300 300" role="img" aria-label="Which U-Net layers run this frame" style="width:100%;max-width:300px;height:auto;align-self:center"></svg>
+        <p class="whatnow" id="whatnow"></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin:0 0 4px;font-size:14px">Cost of each frame, as a share of running the full network</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Blue = head (every frame). Orange = refresh work. Estimated from each layer's compute; real GPU timings vary.</p>
+      <div class="svgwrap"><svg id="chart" class="chart" viewBox="0 0 760 220" role="img" aria-label="Bar chart of each frame's cost" style="min-width:560px;width:100%;height:auto"></svg></div>
+    </div>
+  </section>
+
+  <section>
+    <div>
+      <p class="eyebrow">4 · What we insert</p>
+      <h2>One change inside ReFrame's forward pass</h2>
+    </div>
+    <p>ReFrame decides once per frame whether to rerun the whole deep path. We replace that decision with a small piece of the deep path on every frame. The head and the rest of the network stay the same.</p>
+    <div class="code">
+      <div><div class="codehead">ReFrame: refresh everything every N frames</div>
+<pre><span class="c"># runs once per frame</span>
+if frame % N == 0:
+    <span class="o">cache = deep_path(frame)</span>   <span class="c"># slow: 77% of work</span>
+out = head(cache, frame)</pre></div>
+      <div><div class="codehead">Ours: refresh one strip every frame</div>
+<pre><span class="c"># runs once per frame</span>
+k = frame % G                  <span class="c"># which strip</span>
+rows = strip(k) + border       <span class="c"># a few extra rows</span>
+<span class="o">cache[strip k] = deep_path(frame[rows])</span>
+out = head(cache, frame)       <span class="c"># unchanged</span></pre></div>
+    </div>
+    <p>In our script this is the <span style="font-family:var(--mono)">strips</span> policy in <span style="font-family:var(--mono)">split_refresh_test.py</span>. Priority rotation would change only the first line: pick the strip that changed most instead of <span style="font-family:var(--mono)">frame % G</span>.</p>
+  </section>
+
+  <section>
+    <div>
+      <p class="eyebrow">5 · Next tests</p>
+      <h2>Find the best way to divide the refresh work</h2>
+    </div>
+    <p>We showed that even strips flatten the spikes. Next we test <strong>how</strong> to divide the work: where to cut, which parts matter most, and how to give those parts more refreshes. One rule never changes: <strong>no full-refresh frames</strong>, and every frame gets the same refresh budget.</p>
+
+    <div class="card">
+      <h3 style="margin:0 0 4px;font-size:14px">Three ways to schedule the same refresh work</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:10px">Each square is one strip (row) in one frame (column). Orange = recomputed that frame. The bars under each grid show that frame's cost. Illustrative: the middle strips are assumed to change fastest, as when an object moves through the center of the view.</p>
+      <div class="svgwrap"><svg id="sched" viewBox="0 0 760 690" role="img" aria-label="Three refresh schedules: periodic full refresh, partial plus full refresh, and our priority schedule with a fixed budget per frame" style="min-width:620px;width:100%;height:auto"></svg></div>
+    </div>
+    <p>dLLM-Cache and ToCa refresh the important parts first, but they still fall back to a full refresh every few steps, so the spikes stay (middle grid). We keep their idea of favoring important parts and drop the full refresh: one strip per frame, chosen by importance, with a rule that no strip waits longer than K frames (bottom grid).</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Question we test</th><th>What we try</th><th>Paper to learn from</th><th>What to look at in it</th></tr></thead>
+        <tbody>
+          <tr><th>Where to cut</th><td>Rows (strips) vs. square tiles vs. channels vs. groups of blocks, all at the same work per frame. Measure how even the frame times are and the FLIP quality.</td><td><a href="https://arxiv.org/html/2607.20293" target="_blank" rel="noopener">EVO</a> (cuts by block and step) · <a href="https://arxiv.org/pdf/1806.03377" target="_blank" rel="noopener">PipeDream</a> (cuts layers into equal-time pieces)</td><td>EVO's unit is one block's cached output per step; PipeDream measures each layer's time and balances by it</td></tr>
+          <tr><th>What matters most</th><td>On the real video, measure for each strip (and each block) how fast its cached features go stale, and how much error a stale copy causes in the output.</td><td><a href="https://arxiv.org/html/2607.20293" target="_blank" rel="noopener">EVO</a> · <a href="https://arxiv.org/html/2506.06295v1" target="_blank" rel="noopener">dLLM-Cache</a> · <a href="https://arxiv.org/pdf/2510.14973" target="_blank" rel="noopener">Elastic-Cache</a></td><td>EVO scores each block by how much its activations differ between steps ("activation-dissimilarity priors" in its code), then tests schedules by task success. dLLM-Cache compares cached and fresh values with cosine similarity and picks the most-changed 25%. Elastic-Cache watches attention drift and finds deeper layers drift more</td></tr>
+          <tr><th>How to favor important parts</th><td>Round-robin vs. priority (change score × age, max age K) vs. a schedule found by search, all with the same budget every frame.</td><td><a href="https://arxiv.org/html/2607.20293" target="_blank" rel="noopener">EVO</a> · <a href="https://arxiv.org/pdf/2410.05317" target="_blank" rel="noopener">ToCa</a></td><td>EVO searches over whole schedules with a fixed total budget; we can reuse its search and add a per-frame cap. ToCa scores token importance on each cached step</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3 style="margin:0 0 8px;font-size:14px">Order of work</h3>
+      <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:70ch">
+        <li><strong>Read the papers' code.</strong> How EVO computes its importance priors (<span style="font-family:var(--mono)">prepare_importance</span> in its repo), how dLLM-Cache picks tokens, how they test what matters.</li>
+        <li><strong>Measure importance on our benchmark.</strong> Run the image-composition network uncached and record how much each strip and block changes frame to frame.</li>
+        <li><strong>Compare cuts.</strong> Rows, tiles, channels, blocks: same total work, measure time per frame and FLIP.</li>
+        <li><strong>Build the scheduler.</strong> Priority rotation with a fixed per-frame budget and a max age, then try an EVO-style search with a per-frame cap.</li>
+        <li><strong>Evaluate.</strong> All schedules against ReFrame's periodic refresh on the trade-off plot: worst-case frame time vs. FLIP.</li>
+      </ol>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  // ---------- compute model (GFLOPs per 512x512 frame, from the U-Net's layers)
+  const HEAD = 78.2, DEEP = 254.5, FULL = HEAD + DEEP;   // 23.5% / 76.5%
+  const H = 512, MARGIN = 16;
+  const pct = v => v / FULL * 100;
+  function stripCost(k, G){            // deep path on a crop = strip rows + border, aligned to 8
+    const s = k*H/G, e = (k+1)*H/G;
+    const a = Math.max(0, Math.floor((s-MARGIN)/8)*8), b = Math.min(H, Math.ceil((e+MARGIN)/8)*8);
+    return DEEP * (b-a)/H;
+  }
+
+  // ---------- state
+  const S = { method:'rot', G:8, N:5, t:0, costs:[], ages:[], cacheImg:null, playing:false, timer:null, lastStrip:-1, lastKind:'full' };
+  const RES = 128;                     // internal canvas resolution for the toy frames
+  const blobs = [];
+  (function seed(){ let x = 7; const r = () => (x = (x*9301 + 49297) % 233280) / 233280;
+    for (let i=0;i<5;i++) blobs.push({x:20+r()*88, y:20+r()*88, vx:(r()-.5)*3.2, vy:(r()-.5)*3.2, s:9+r()*7}); })();
+
+  function frameAt(t){                 // deterministic drifting blobs, bouncing at the edges
+    const img = new Float32Array(RES*RES);
+    blobs.forEach(b => {
+      let x = b.x + b.vx*t, y = b.y + b.vy*t;
+      const span = RES-16;
+      x = 8 + Math.abs(((x-8) % (2*span) + 2*span) % (2*span) - span) ;
+      y = 8 + Math.abs(((y-8) % (2*span) + 2*span) % (2*span) - span) ;
+      const s2 = 2*b.s*b.s;
+      for (let j=Math.max(0,Math.floor(y-3*b.s)); j<Math.min(RES,y+3*b.s); j++)
+        for (let i=Math.max(0,Math.floor(x-3*b.s)); i<Math.min(RES,x+3*b.s); i++){
+          img[j*RES+i] += Math.exp(-((i-x)**2+(j-y)**2)/s2);
+        }
+    });
+    return img;
+  }
+
+  function css(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  function hexToRgb(c){ const d=document.createElement('canvas').getContext('2d'); d.fillStyle=c; const v=d.fillStyle;
+    if (v.startsWith('#')) return [parseInt(v.slice(1,3),16),parseInt(v.slice(3,5),16),parseInt(v.slice(5,7),16)];
+    const m=v.match(/\d+/g); return m? m.slice(0,3).map(Number):[0,0,0]; }
+
+  // ---------- simulation step
+  function reset(){
+    S.t=0; S.costs=[]; S.cacheImg=null; S.ages=[]; S.lastStrip=-1;
+    const G = S.method==='per'?1:S.G;
+    S.ages = new Array(G).fill(0);
+    stepOnce(true);
+  }
+  function stepOnce(first){
+    const f = frameAt(S.t);
+    let deep = 0, kind = 'cached', strip = -1;
+    if (S.method==='per'){
+      if (S.t % S.N === 0){ S.cacheImg = f.slice(); S.ages=[0]; deep = DEEP; kind='full'; }
+      else { S.ages=[S.ages[0]+1]; }
+    } else {
+      if (first || !S.cacheImg){ S.cacheImg = f.slice(); S.ages = new Array(S.G).fill(0); deep = DEEP; kind='full'; }
+      else {
+        strip = (S.t-1) % S.G;
+        const r0 = strip*RES/S.G, r1 = (strip+1)*RES/S.G;
+        for (let j=r0;j<r1;j++) for (let i=0;i<RES;i++) S.cacheImg[j*RES+i] = f[j*RES+i];
+        S.ages = S.ages.map((a,i)=> i===strip?0:a+1);
+        deep = stripCost(strip, S.G); kind='strip';
+      }
+    }
+    S.lastStrip = strip; S.lastKind = kind; S.frame = f;
+    S.costs.push({h:pct(HEAD), r:pct(deep), first: !!first});
+    render();
+  }
+  function next(){ S.t++; stepOnce(false); }
+
+  // ---------- drawing helpers
+  function drawField(cv, field){
+    const ctx = cv.getContext('2d'); const W = cv.width;
+    const off = document.createElement('canvas'); off.width=RES; off.height=RES;
+    const octx = off.getContext('2d'); const id = octx.createImageData(RES,RES);
+    const bg = hexToRgb(css('--soft')), fg = hexToRgb(css('--cached'));
+    for (let p=0;p<RES*RES;p++){ const v = Math.min(1, field[p]);
+      id.data[p*4]   = bg[0]+(fg[0]-bg[0])*v; id.data[p*4+1] = bg[1]+(fg[1]-bg[1])*v;
+      id.data[p*4+2] = bg[2]+(fg[2]-bg[2])*v; id.data[p*4+3] = 255; }
+    octx.putImageData(id,0,0);
+    ctx.imageSmoothingEnabled = true; ctx.clearRect(0,0,W,W); ctx.drawImage(off,0,0,W,W);
+  }
+
+  function render(){
+    const G = S.method==='per'?1:S.G, W = 300;
+    // current frame + highlighted strip
+    const cf = document.getElementById('cv-frame'); drawField(cf, S.frame);
+    const c1 = cf.getContext('2d');
+    if (S.lastKind==='strip'){
+      const s = S.lastStrip*W/G, e = (S.lastStrip+1)*W/G, m = MARGIN/H*W;
+      c1.fillStyle = css('--refresh'); c1.globalAlpha=.16; c1.fillRect(0,Math.max(0,s-m),W,Math.min(W,e+m)-Math.max(0,s-m));
+      c1.globalAlpha=.42; c1.fillRect(0,s,W,e-s); c1.globalAlpha=1;
+      c1.strokeStyle = css('--refresh'); c1.lineWidth=2; c1.strokeRect(1,s+1,W-2,e-s-2);
+    } else if (S.lastKind==='full'){
+      c1.strokeStyle = css('--refresh'); c1.lineWidth=4; c1.strokeRect(2,2,W-4,W-4);
+    }
+    // cache contents + ages
+    const cc = document.getElementById('cv-cache'); drawField(cc, S.cacheImg);
+    const c2 = cc.getContext('2d');
+    c2.strokeStyle = css('--panel'); c2.lineWidth = 2;
+    for (let k=1;k<G;k++){ const y=k*W/G; c2.beginPath(); c2.moveTo(0,y); c2.lineTo(W,y); c2.stroke(); }
+    c2.font = '600 12px "IBM Plex Mono", monospace'; c2.textBaseline='middle';
+    const maxAge = Math.max(...S.ages);
+    S.ages.forEach((a,k)=>{
+      const y0 = k*W/G, h = W/G, cy = y0+h/2;
+      if (a>0){ c2.fillStyle = css('--ink'); c2.globalAlpha = Math.min(.5, a*0.06); c2.fillRect(0,y0,W,h); c2.globalAlpha=1; }
+      if (S.lastKind!=='cached' && (S.lastKind==='full' || k===S.lastStrip)){
+        c2.strokeStyle = css('--refresh'); c2.lineWidth=3; c2.strokeRect(1.5,y0+1.5,W-3,h-3);
+      }
+      if (h>=16){
+        const txt = a===0? 'new' : a+'';
+        const tw = c2.measureText(txt).width + 12;
+        c2.fillStyle = css('--panel'); c2.globalAlpha=.9; c2.fillRect(W-tw-6, cy-9, tw, 18); c2.globalAlpha=1;
+        c2.fillStyle = a===0? css('--refresh') : css('--ink'); c2.textAlign='center'; c2.fillText(txt, W-6-tw/2, cy+1);
+      }
+    });
+    // mini network
+    drawMini(G);
+    // stats
+    const last = S.costs[S.costs.length-1];
+    const steady = S.costs.filter(c=>!c.first);
+    const worst = steady.length? Math.max(...steady.map(c=>c.h+c.r)) : last.h+last.r;
+    document.getElementById('s-frame').textContent = S.t;
+    document.getElementById('s-cost').innerHTML = Math.round(last.h+last.r) + '<small>%</small>';
+    document.getElementById('s-max').innerHTML = Math.round(worst) + '<small>%</small>';
+    document.getElementById('s-age').innerHTML = maxAge + '<small> frames</small>';
+    const wn = document.getElementById('whatnow');
+    if (S.lastKind==='full') wn.textContent = S.t===0 ? 'Frame 0 builds the cache: the whole network runs.' : 'Refresh frame: the whole deep path runs again. This is the spike.';
+    else if (S.lastKind==='cached') wn.textContent = 'Cheap frame: only the head runs and reuses the cache. The cache gets one frame older.';
+    else wn.textContent = 'Strip ' + (S.lastStrip+1) + ' of ' + G + ': the deep path runs on just these rows (plus a border), then the head runs on the full mixed cache.';
+    // big U-Net state
+    const u = document.getElementById('unet');
+    u.setAttribute('class', 'head-on ' + (S.lastKind==='full'?'deep-full':S.lastKind==='strip'?'deep-strip':'deep-idle'));
+    u.querySelectorAll('rect.band').forEach(b=>{
+      const y = +b.dataset.y, h = +b.dataset.h;
+      if (S.lastKind==='strip'){ b.setAttribute('y', y + S.lastStrip*h/G); b.setAttribute('height', h/G); }
+    });
+    drawChart();
+  }
+
+  // ---------- U-Net drawings
+  const L = [ // name, res, ch, group, cx, cy
+    ['down1',512,64,'head',120,96], ['down2',256,128,'deep',120,196], ['down3',128,256,'deep',120,296],
+    ['bottleneck',64,512,'deep',330,370], ['up3',128,256,'deep',540,296], ['up2',256,128,'deep',540,196],
+    ['up1',512,64,'deep',480,96], ['up_conv1',512,64,'head',680,96] ];
+  const width = r => r===512?120: r===256?100: r===128?84:70;
+  function buildUnet(){
+    const svg = document.getElementById('unet'); const NS='http://www.w3.org/2000/svg';
+    const el = (t,a,p)=>{ const e=document.createElementNS(NS,t); for (const k in a) e.setAttribute(k,a[k]); (p||svg).appendChild(e); return e; };
+    const pos = {}; L.forEach(l=> pos[l[0]] = {cx:l[4], cy:l[5], w:width(l[1])});
+    const bh = 46;
+    // flow arrows
+    const A = (d)=> el('path',{d, class:'arrow','marker-end':'url(#ar)'});
+    A(`M120 ${96+bh/2} V${196-bh/2}`); A(`M120 ${196+bh/2} V${296-bh/2}`);
+    A(`M120 ${296+bh/2} V370 H${330-35}`); A(`M${330+35} 370 H540 V${296+bh/2}`);
+    A(`M540 ${296-bh/2} V${196+bh/2}`); A(`M540 ${196-bh/2} V140 H480 V${96+bh/2}`);
+    A(`M${480+60} 96 H${680-60}`);
+    // input / output
+    el('text',{x:120,y:30,'text-anchor':'middle',class:'lblstrong'}).textContent='frame in (512×512×3)';
+    A(`M120 38 V${96-bh/2}`);
+    el('text',{x:680,y:186,'text-anchor':'middle',class:'lblstrong'}).textContent='frame out';
+    A(`M680 ${96+bh/2} V170`);
+    // skips
+    el('path',{d:`M${120+50} 196 H${540-50}`, class:'skip','marker-end':'url(#ar)'});
+    el('path',{d:`M${120+42} 296 H${540-42}`, class:'skip','marker-end':'url(#ar)'});
+    el('path',{d:`M120 ${96-bh/2} V58 H680 V${96-bh/2}`, class:'skip','marker-end':'url(#ar)'});
+    el('text',{x:400,y:52,'text-anchor':'middle',class:'lbl'}).textContent='skip: fine detail from down1 goes straight to the head';
+    // boxes
+    L.forEach(l=>{
+      const [nm,r,ch,grp,cx,cy] = l, w = width(r);
+      const g = el('g',{class:'lay '+grp});
+      el('rect',{x:cx-w/2,y:cy-bh/2,width:w,height:bh,rx:8,class:'box'},g);
+      el('rect',{x:cx-w/2+1,y:cy-bh/2+1,width:w-2,height:(bh-2),rx:7,class:'band','data-y':cy-bh/2+1,'data-h':bh-2},g);
+      const t1 = el('text',{x:cx,y:cy-3,'text-anchor':'middle',class:'nm'},g); t1.textContent = nm;
+      const t2 = el('text',{x:cx,y:cy+14,'text-anchor':'middle'},g); t2.textContent = r+'²·'+ch;
+    });
+    // cache chip on the up1 -> up_conv1 link
+    const cg = el('g',{class:'cachechip'});
+    el('rect',{x:550,y:106,width:70,height:20,rx:10},cg);
+    const ct = el('text',{x:585,y:120,'text-anchor':'middle'},cg); ct.textContent='cache u1';
+    // group labels
+    el('text',{x:330,y:250,'text-anchor':'middle',class:'lblstrong'}).textContent='deep path (cached)';
+    el('text',{x:330,y:268,'text-anchor':'middle',class:'lbl'}).textContent='image shrinks to 64×64, then grows back';
+    el('text',{x:330,y:410,'text-anchor':'middle',class:'lbl'}).textContent='numbers: image size² · feature channels';
+  }
+  function drawMini(G){
+    const svg = document.getElementById('mini'); const NS='http://www.w3.org/2000/svg';
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    const el = (t,a)=>{ const e=document.createElementNS(NS,t); for (const k in a) e.setAttribute(k,a[k]); svg.appendChild(e); return e; };
+    const boxes = [['down1',40,40,'head'],['down2',40,110,'deep'],['down3',40,180,'deep'],['bottleneck',150,240,'deep'],
+                   ['up3',260,180,'deep'],['up2',260,110,'deep'],['up1',205,40,'deep'],['head',270,40,'headout']];
+    el('path',{d:'M40 57 V93 M40 127 V163 M40 197 V240 H114 M186 240 H260 V197 M260 163 V127 M260 93 V70 H205 V57 M232 40 H243',
+      fill:'none', stroke:css('--muted'), 'stroke-width':1.2, opacity:.7});
+    el('path',{d:'M40 23 V12 H270 V23', fill:'none', stroke:css('--muted'), 'stroke-width':1.1, 'stroke-dasharray':'3 3', opacity:.7});
+    boxes.forEach(([nm,cx,cy,grp])=>{
+      const w = nm==='bottleneck'?72:54, h=34, isHead = grp!=='deep';
+      let fill = css('--soft'), stroke = css('--line'), op = 1;
+      if (isHead){ fill = css('--cached-soft'); stroke = css('--cached'); }
+      else if (S.lastKind==='full'){ fill = css('--refresh-soft'); stroke = css('--refresh'); }
+      else if (S.lastKind==='strip'){ stroke = css('--refresh'); }
+      else op = .55;
+      el('rect',{x:cx-w/2,y:cy-h/2,width:w,height:h,rx:6,fill,stroke,'stroke-width':1.5,opacity:op});
+      if (!isHead && S.lastKind==='strip'){
+        el('rect',{x:cx-w/2+1,y:cy-h/2+1+S.lastStrip*(h-2)/G,width:w-2,height:(h-2)/G,fill:css('--refresh'),opacity:.55});
+      }
+      const t = el('text',{x:cx,y:cy+4,'text-anchor':'middle','font-size':10.5,'font-weight':600,fill:css('--ink'),opacity:op});
+      t.textContent = nm==='bottleneck'?'bottleneck':nm;
+    });
+    const t = el('text',{x:150,y:292,'text-anchor':'middle','font-size':11,fill:css('--muted')});
+    t.textContent = S.lastKind==='full' ? 'all layers run' : S.lastKind==='strip' ? 'deep path runs on 1 strip only' : 'deep path skipped (cache reused)';
+  }
+
+  // ---------- cost chart
+  function drawChart(){
+    const svg = document.getElementById('chart'); const NS='http://www.w3.org/2000/svg';
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    const el = (t,a)=>{ const e=document.createElementNS(NS,t); for (const k in a) e.setAttribute(k,a[k]); svg.appendChild(e); return e; };
+    const x0=44, x1=744, y0=14, yb=190, n=40, bw=(x1-x0)/n;
+    const y = v => yb - v/100*(yb-y0);
+    [0,25,50,75,100].forEach(v=>{ el('line',{x1:x0,x2:x1,y1:y(v),y2:y(v),class:'grid'}); const t=el('text',{x:x0-8,y:y(v)+4,'text-anchor':'end'}); t.textContent=v+'%'; });
+    const start = Math.max(0, S.costs.length-n);
+    S.costs.slice(start).forEach((c,i)=>{
+      const x = x0 + i*bw + bw*.15, w = bw*.7;
+      el('rect',{x,y:y(c.h),width:w,height:yb-y(c.h),class:'bh'});
+      if (c.r>0) el('rect',{x,y:y(c.h+c.r),width:w,height:y(c.h)-y(c.h+c.r),class:'br'});
+      if (start+i===S.costs.length-1) el('rect',{x:x-2,y:y(c.h+c.r)-2,width:w+4,height:yb-y(c.h+c.r)+2,class:'cur'});
+      if ((start+i)%5===0){ const t=el('text',{x:x+w/2,y:yb+16,'text-anchor':'middle'}); t.textContent=start+i; }
+    });
+    const lab = el('text',{x:x1,y:yb+30,'text-anchor':'end'}); lab.textContent='frame';
+  }
+
+  // ---------- controls
+  function setPressed(ids, on){ ids.forEach(id=> document.getElementById(id).setAttribute('aria-pressed', id===on?'true':'false')); }
+  function setMethod(m){ S.method=m; setPressed(['m-per','m-rot'], m==='per'?'m-per':'m-rot');
+    ['g4','g8','g16'].forEach(id=> document.getElementById(id).disabled = (m==='per')); reset(); prerun(); }
+  function setG(g){ S.G=g; setPressed(['g4','g8','g16'],'g'+g); reset(); prerun(); }
+  function prerun(){ for (let i=0;i<11;i++) next(); }
+  function stop(){ S.playing=false; clearInterval(S.timer); document.getElementById('play').textContent='Play'; }
+  document.getElementById('m-per').onclick=()=>{ stop(); setMethod('per'); };
+  document.getElementById('m-rot').onclick=()=>{ stop(); setMethod('rot'); };
+  document.getElementById('g4').onclick=()=>{ stop(); setG(4); };
+  document.getElementById('g8').onclick=()=>{ stop(); setG(8); };
+  document.getElementById('g16').onclick=()=>{ stop(); setG(16); };
+  document.getElementById('next').onclick=()=>{ stop(); next(); };
+  document.getElementById('reset').onclick=()=>{ stop(); reset(); };
+  document.getElementById('play').onclick=()=>{
+    if (S.playing){ stop(); return; }
+    S.playing=true; document.getElementById('play').textContent='Pause';
+    S.timer = setInterval(next, 450);
+  };
+  if (window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', ()=>render());
+
+  buildUnet(); reset(); prerun();
+
+  // ---------- section 5: schedule grids
+  function drawSched(){
+    const svg = document.getElementById('sched'); const NS='http://www.w3.org/2000/svg';
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    const el = (t,a,txt)=>{ const e=document.createElementNS(NS,t); for (const k in a) e.setAttribute(k,a[k]); if (txt!==undefined) e.textContent=txt; svg.appendChild(e); return e; };
+    const G = 8, F = 20, w = [0.3,0.5,0.85,1.0,0.95,0.7,0.45,0.3], K = 12, NFULL = 5;
+    const x0 = 150, cw = 28, ch = 13, gap = 2;
+    // build three schedules: matrix [frame][strip] -> 0/1, plus full flag
+    const periodic = [], partial = [], ours = [];
+    let age = new Array(G).fill(0);
+    for (let f=0; f<F; f++){
+      const full = f % NFULL === 0;
+      periodic.push(new Array(G).fill(full?1:0));
+      if (full) partial.push(new Array(G).fill(1));
+      else { // refresh the 2 most important strips (most-changed), like dLLM-Cache's 25%
+        const order = w.map((v,i)=>[v,i]).sort((a,b)=>b[0]-a[0]).slice(0,2).map(p=>p[1]);
+        partial.push(new Array(G).fill(0).map((_,i)=> order.includes(i)?1:0));
+      }
+      // ours: one strip per frame; score = importance x (age+1); any strip at age K is forced
+      let pick;
+      if (f === 0) pick = -1;
+      else {
+        const forced = age.findIndex(a=>a>=K-1);
+        pick = forced >= 0 ? forced : age.map((a,i)=>[w[i]*(a+1), i]).sort((a,b)=>b[0]-a[0])[0][1];
+      }
+      ours.push(new Array(G).fill(0).map((_,i)=> (f===0 || i===pick)?1:0));
+      age = age.map((a,i)=> (f===0 || i===pick)?0:a+1);
+    }
+    const blocks = [
+      ['Periodic full refresh', 'ReFrame', periodic],
+      ['Important parts + full refresh', 'dLLM-Cache / ToCa style', partial],
+      ['Ours: priority, fixed budget', 'no full refresh, max age 12', ours]
+    ];
+    const css2 = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    blocks.forEach((b, bi) => {
+      const yt = 18 + bi*228, y0 = yt + 34;
+      const tt = el('text',{x:0,y:yt,'font-size':13,'font-weight':600,fill:css2('--ink')}, b[0]);
+      el('text',{x:0,y:yt+17,'font-size':11.5,fill:css2('--muted')}, b[1]);
+      for (let s=0; s<G; s++){
+        el('text',{x:x0-8,y:y0+s*(ch+gap)+ch-2,'text-anchor':'end','font-size':10,fill:css2('--muted'),'font-family':'IBM Plex Mono, monospace'}, 'strip '+(s+1));
+        for (let f=0; f<F; f++){
+          const on = b[2][f][s];
+          el('rect',{x:x0+f*cw, y:y0+s*(ch+gap), width:cw-3, height:ch, rx:2,
+            fill: on? css2('--refresh') : css2('--soft'), stroke: on? 'none' : css2('--line'), 'stroke-width':0.6});
+        }
+      }
+      // cost bars: head share + refreshed fraction of deep path
+      const by = y0 + G*(ch+gap) + 8, bh = 34;
+      for (let f=0; f<F; f++){
+        const frac = b[2][f].reduce((a,v)=>a+v,0)/G;
+        const cost = 0.235 + 0.765*frac;
+        const h = cost*bh, x = x0+f*cw;
+        el('rect',{x, y:by+bh-h, width:cw-3, height:h, rx:1.5, fill: frac===1 && f>0 ? css2('--refresh') : css2('--cached'), opacity: frac===1 && f>0 ? 1 : .85});
+      }
+      el('text',{x:x0-8,y:by+bh-4,'text-anchor':'end','font-size':10,fill:css2('--muted'),'font-family':'IBM Plex Mono, monospace'}, 'cost');
+      for (let f=0; f<F; f+=5) el('text',{x:x0+f*cw+(cw-3)/2, y:y0-5,'text-anchor':'middle','font-size':10,fill:css2('--muted'),'font-family':'IBM Plex Mono, monospace'}, 'f'+f);
+    });
+  }
+  drawSched();
+  if (window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', drawSched);
+})();
+</script>
+</body>
+</html>
