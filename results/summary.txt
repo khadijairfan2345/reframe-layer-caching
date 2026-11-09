@@ -1,0 +1,17 @@
+device=mps  size=512  steps=200  N=5
+
+Cost of each piece (median ms):
+  head (every step)       100.686
+  piece1 down2+down3       63.022
+  piece2 bottleneck        24.680
+  piece3 up3               93.358
+  piece4 up2               92.645
+  piece5 up1               31.679
+  largest piece / smallest piece = 3.8x   (1.0x would be perfectly even)
+
+policy             mean      p50      p95      p99      max  max/mean   rel.error(mean / max)
+none            340.993  304.406  615.964  857.571 1180.932      3.46     (reference)
+periodic        107.326   57.970  281.569  416.054  726.618      6.77   0.1402 / 0.2623
+split           141.052  109.015  359.644  688.241 1207.209      8.56   0.2126 / 0.3834
+strips4_m16     163.549  141.230  284.716  413.349  640.118      3.91   0.1283 / 0.1879
+strips8_m16     111.768  103.168  172.627  209.526  233.912      2.09   0.1688 / 0.2770
