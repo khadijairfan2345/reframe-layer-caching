@@ -1,0 +1,147 @@
+        # we are training and a coin flip says we should.
+        flip_threshold = 0.5 if phase == "train" else 0.0
+        flip = torch.rand(1).item() < flip_threshold
+
+        if flip:
+            # flip all images.
+            cur_image = torch.flip(cur_image, (-1,))
+            src_image = torch.flip(src_image, (-1,))
+
+        # > REFRAME start
+        if self.use_reframe:
+            refresh_cache = True
+            if self.reframe_cached_image is not None:
+                if "delta" in self.reframe_cache_policy:
+                    diff = torch.abs(cur_image - self.cached_image).mean().item()
+                    smape = 2 * diff / (torch.abs(cur_image) + torch.abs(self.cached_image)).mean().item()
+                    threshold = float(self.reframe_cache_policy.split("-")[1])
+                    if smape > threshold:
+                        refresh_cache = True
+                        self.reframe_cached_image = cur_image
+                    else:
+                        refresh_cache = False
+
+                elif "N" in self.reframe_cache_policy:
+                    every_n = int(self.reframe_cache_policy.split("-")[1])
+                    refresh_cache = (self.frame_counter % every_n == 0)
+                
+                else:
+                    print("Invalid cache policy")
+            else:
+                self.reframe_cached_image = cur_image
+            
+            if not refresh_cache:
+                self.reframe_skipped += 1
+        # > REFRAME end
+        
+        # Compute image features for the current view. Used for a strong image
+        # prior.
+        # > REFRAME start
+        if self.use_reframe:
+            if self.reframe_cache is None or refresh_cache:
+                cur_feats = self.encoder(cur_image)
+                self.reframe_cache = {
+                    "encoder": cur_feats,
+                }
+            else:
+                cur_feats = self.reframe_cache["encoder"]
+                x = self.encoder(cur_image, use_reframe=True)
+                cur_feats[0] = x
+
+        else:
+            cur_feats = self.encoder(cur_image)
+        # > REFRAME end
+
+        # Compute matching features
+        matching_cur_feats, matching_src_feats = self.compute_matching_feats(
+            cur_image, src_image, unbatched_matching_encoder_forward
+        )
+
+        if flip:
+            # now (carefully) flip matching features back for correct MVS.
+            matching_cur_feats = torch.flip(matching_cur_feats, (-1,))
+            matching_src_feats = torch.flip(matching_src_feats, (-1,))
+
+        # Get min and max depth to the right shape, device and dtype
+=========== inference.py ===========
+
+    print(f"Saving to {pred_output_dir}")
+    print(f"Tuple file location: {opts.tuple_info_file_location}")
+    print(f"Dataset: {opts.dataset}")
+    print(f"Split: {opts.dataset_scan_split_file}")
+    print(f"Scan id: {opts.single_debug_scan_id}")
+    print(f"Path: {opts.dataset_path}")
+
+    timer = []
+
+    # Set up model. Note that we're not passing in opts as an argument, although
+    # we could. We're being pretty stubborn with using the options the model had
+    # used when training, saved internally as part of hparams in the checkpoint.
+    # You can change this at inference by passing in 'opts=opts,' but there
+    # be dragons if you're not careful.
+    model = BDModel.load_from_checkpoint(opts.load_weights_from_checkpoint, args=None)
+
+    # > REFRAME start
+    print(f"Reframe: {opts.use_reframe}")
+    print(f"Reframe: {opts.reframe_cache_policy}")
+
+    model.use_cache = opts.use_reframe
+    model.reframe_cache_policy = opts.reframe_cache_policy
+    # > REFRAME end
+
+    if opts.fast_cost_volume and isinstance(model.cost_volume, cost_volume.FeatureVolumeManager):
+        model.cost_volume = model.cost_volume.to_fast()
+
+    model = model.cuda().eval()
+
+    if model.run_opts.use_prior and opts.use_prior:
+        print("########################################")
+        print(f"using prior model with real priors; forcing batch_size to be 1")
+        print("########################################")
+        opts.batch_size = 1
+
+    # loop over scans
+    for scan in tqdm(scans, desc="Looping over scans"):
+        scan_name = Path(scan).name
+
+        print("Making implicit depth predictions for ", scan_name)
+
+        # set up dataset with current scan
+        dataset = dataset_class(
+            opts.dataset_path,
+            split=opts.split,
+            mv_tuple_file_suffix=opts.mv_tuple_file_suffix,
+            limit_to_scan_id=scan,
+            include_full_res_depth=True,
+            tuple_info_file_location=opts.tuple_info_file_location,
+            num_images_in_tuple=None,
+            shuffle_tuple=opts.shuffle_tuple,
+            include_high_res_color=False,
+            include_full_depth_K=True,
+            skip_frames=opts.skip_frames,
+            image_width=opts.image_width,
+            image_height=opts.image_height,
+            pass_frame_id=True,
+            get_bd_info=True,
+        )
+
+        if len(dataset) == 0:
+            raise ValueError(f"Found 0 frames for dataset {scan_name} – please check your paths!")
+
+        dataloader = torch.utils.data.DataLoader(
+            dataset,
+            batch_size=opts.batch_size,
+            shuffle=False,
+            num_workers=opts.num_workers,
+            drop_last=False,
+        )
+
+        (pred_output_dir / asset_name / scan_name).mkdir(exist_ok=True, parents=True)
+
+        if model.run_opts.use_prior and opts.use_prior:
+            prev_pred = None
+            prev_cam_T_world = None
+
+        for batch_ind, (cur_data, src_data) in enumerate(tqdm(dataloader, desc=scan_name)):
+            if opts.max_frames is not None and batch_ind >= opts.max_frames:
+                print(f"Stopping early, as max_frames is {opts.max_frames}")
