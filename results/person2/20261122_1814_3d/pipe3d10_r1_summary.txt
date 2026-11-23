@@ -1,0 +1,215 @@
+Skipped frames: 295
+Total inference time: 5.699
+Mean inference time: 0.019
+
+[time_parts] wrote out_p2_pipe3d10_r1/part_times.csv
+
+PIPE_K0 frames: 29  (mean ms per part)
+  TOTAL               20.50
+  encoder              0.73
+  matching_model       9.05
+  cost_volume          1.46
+  cost_volume_net      0.00
+  depth_decoder        7.91
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.35
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.64
+
+PIPE_K1 frames: 30  (mean ms per part)
+  TOTAL               19.23
+  encoder              0.73
+  matching_model       0.00
+  cost_volume          9.26
+  cost_volume_net      0.00
+  depth_decoder        8.06
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.51
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.47
+
+PIPE_K2 frames: 30  (mean ms per part)
+  TOTAL               19.11
+  encoder              0.73
+  matching_model       0.00
+  cost_volume          9.24
+  cost_volume_net      0.00
+  depth_decoder        7.98
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.42
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.46
+
+PIPE_K3 frames: 30  (mean ms per part)
+  TOTAL               17.61
+  encoder              0.73
+  matching_model       0.00
+  cost_volume          7.74
+  cost_volume_net      0.00
+  depth_decoder        7.97
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.42
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.46
+
+PIPE_K4 frames: 30  (mean ms per part)
+  TOTAL               19.72
+  encoder              0.74
+  matching_model       0.00
+  cost_volume          0.00
+  cost_volume_net      0.00
+  depth_decoder        7.90
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               1.18
+  enc_L1               1.10
+  enc_L2               1.13
+  enc_L3               7.20
+  enc_L4               0.00
+  dec_row0             7.34
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other               10.38
+
+PIPE_K5 frames: 30  (mean ms per part)
+  TOTAL               19.17
+  encoder              0.73
+  matching_model       0.00
+  cost_volume          9.29
+  cost_volume_net      0.00
+  depth_decoder        7.98
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.43
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.46
+
+PIPE_K6 frames: 29  (mean ms per part)
+  TOTAL               19.17
+  encoder              0.74
+  matching_model       0.00
+  cost_volume          9.28
+  cost_volume_net      0.00
+  depth_decoder        7.98
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.43
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.47
+
+PIPE_K7 frames: 29  (mean ms per part)
+  TOTAL               18.35
+  encoder              0.73
+  matching_model       0.00
+  cost_volume          8.47
+  cost_volume_net      0.00
+  depth_decoder        7.98
+  binary_mlp           0.70
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.43
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.46
+
+PIPE_K8 frames: 29  (mean ms per part)
+  TOTAL               19.59
+  encoder              0.73
+  matching_model       0.00
+  cost_volume          0.00
+  cost_volume_net      3.13
+  depth_decoder        7.89
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               6.64
+  dec_row0             7.33
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                7.13
+
+PIPE_K9 frames: 29  (mean ms per part)
+  TOTAL               20.03
+  encoder              0.74
+  matching_model       0.00
+  cost_volume          0.00
+  cost_volume_net      0.00
+  depth_decoder       18.19
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.71
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.32
+  dec_row1             4.01
+  dec_row2             3.08
+  dec_row3             1.91
+  dec_row4             0.39
+  other                0.39

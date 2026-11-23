@@ -1,0 +1,6 @@
+every5_r1 vs nocache:
+296 frames; max abs diff 1.0 mean of per-frame max 0.739450991153717
+deltaL vs nocache:
+296 frames; max abs diff 0.99485886 mean of per-frame max 0.07624190300703049
+pipe5_r1 vs nocache:
+296 frames; max abs diff 1.0 mean of per-frame max 0.9721436500549316

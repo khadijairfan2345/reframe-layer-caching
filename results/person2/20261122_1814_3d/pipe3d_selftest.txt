@@ -1,0 +1,20 @@
+Saving to out_p2_pipe3d10_selftest
+Reframe: pipe3d-10
+[pipe3d] encoder feature blocks [0, 1, 2, 4, 5]; plan for G=10:
+[pipe3d selftest] cost volume (1, 64, 96, 128) vs one-shot: max abs diff 0; encoder levels (5) vs encoder(): 0
+[pipe3d selftest] decoder cache (7 tensors) vs one-shot refresh: max abs diff 0
+[pipe3d selftest] cost volume (1, 64, 96, 128) vs one-shot: max abs diff 0; encoder levels (5) vs encoder(): 0
+[pipe3d selftest] decoder cache (7 tensors) vs one-shot refresh: max abs diff 0
+[pipe3d selftest] cost volume (1, 64, 96, 128) vs one-shot: max abs diff 0; encoder levels (5) vs encoder(): 0
+[pipe3d selftest] decoder cache (7 tensors) vs one-shot refresh: max abs diff 0
+[pipe3d selftest] cost volume (1, 64, 96, 128) vs one-shot: max abs diff 0; encoder levels (5) vs encoder(): 0
+[pipe3d selftest] decoder cache (7 tensors) vs one-shot refresh: max abs diff 0
+[pipe3d selftest] cost volume (1, 64, 96, 128) vs one-shot: max abs diff 0; encoder levels (5) vs encoder(): 0
+[pipe3d selftest] decoder cache (7 tensors) vs one-shot refresh: max abs diff 0
+[pipe3d selftest] cost volume (1, 64, 96, 128) vs one-shot: max abs diff 0; encoder levels (5) vs encoder(): 0
+[pipe3d selftest] decoder cache (7 tensors) vs one-shot refresh: max abs diff 0
+[pipe3d selftest] cost volume (1, 64, 96, 128) vs one-shot: max abs diff 0; encoder levels (5) vs encoder(): 0
+[pipe3d selftest] decoder cache (7 tensors) vs one-shot refresh: max abs diff 0
+[pipe3d selftest] cost volume (1, 64, 96, 128) vs one-shot: max abs diff 0; encoder levels (5) vs encoder(): 0
+[pipe3d selftest] decoder cache (7 tensors) vs one-shot refresh: max abs diff 0
+[pipe3d selftest] cost volume (1, 64, 96, 128) vs one-shot: max abs diff 0; encoder levels (5) vs encoder(): 0

@@ -1,0 +1,26 @@
+Skipped frames: 0
+Total inference time: 31.666
+Mean inference time: 0.107
+
+[time_parts] wrote out_p2_nocache/part_times.csv
+
+REFRESH frames: 295  (mean ms per part)
+  TOTAL              107.27
+  encoder             17.29
+  matching_model       8.94
+  cost_volume         58.16
+  cost_volume_net      3.48
+  depth_decoder       18.09
+  binary_mlp           0.70
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               1.17
+  enc_L2               1.17
+  enc_L3               7.45
+  enc_L4               6.69
+  dec_row0             7.41
+  dec_row1             4.19
+  dec_row2             2.81
+  dec_row3             1.90
+  dec_row4             0.35
+  other                0.61

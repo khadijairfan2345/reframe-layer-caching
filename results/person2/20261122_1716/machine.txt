@@ -1,0 +1,8 @@
+Sun Nov 22 17:16:01 EST 2026
+holygpu7c26304.rc.fas.harvard.edu
+GPU 0: NVIDIA A100-SXM4-40GB (UUID: GPU-6692444b-1131-e7d2-757a-9c8e05db1413)
+  MIG 3g.20gb     Device  0: (UUID: MIG-f8c53e77-7cdd-5c71-8e9c-18f932a32253)
+name, memory.total [MiB], driver_version
+NVIDIA A100-SXM4-40GB, 40960 MiB, 610.57.04
+torch 1.10.0 cuda 11.3
+7143e177175b7cf28ad409f88200b9e712f92b2a

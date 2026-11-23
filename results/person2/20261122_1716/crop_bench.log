@@ -1,0 +1,29 @@
+################################################################################
+########################## Using FeatureVolumeManager ##########################
+ Number of source views:      7  
+ Using all metadata.  
+ Number of channels:          [202, 128, 128, 1]  
+################################################################################
+
+image 384x512, level-0 features 192x256, decoder input channels [24, 64, 128, 256, 384]
+G= 1 border= 0 rows0=192  encoder_full   16.72 ms  decoder_full   16.94 ms
+G= 1 border= 8 rows0=192  encoder_full   16.72 ms  decoder_full   16.94 ms
+G= 1 border=16 rows0=192  encoder_full   16.72 ms  decoder_full   16.94 ms
+G= 1 border=32 rows0=192  encoder_full   16.72 ms  decoder_full   16.94 ms
+G= 2 border= 0 rows0= 96  encoder_full   16.18 ms  decoder_full   12.78 ms
+G= 2 border= 8 rows0=112  encoder_full   16.05 ms  decoder_full   12.90 ms
+G= 2 border=16 rows0=128  encoder_full   15.94 ms  decoder_full   13.64 ms
+G= 2 border=32 rows0=160  encoder_full   16.00 ms  decoder_full   14.16 ms
+G= 4 border= 0 rows0= 48  encoder_full   16.08 ms  decoder_full   11.70 ms
+G= 4 border= 8 rows0= 64  encoder_full   16.09 ms  decoder_full   11.85 ms
+G= 4 border=16 rows0= 80  encoder_full   16.01 ms  decoder_full   11.56 ms
+G= 4 border=32 rows0=112  encoder_full   16.05 ms  decoder_full   12.90 ms
+G= 8 border= 0 rows0= 32  encoder_full   15.53 ms  decoder_full   11.54 ms
+G= 8 border= 8 rows0= 48  encoder_full   16.08 ms  decoder_full   11.70 ms
+G= 8 border=16 rows0= 64  encoder_full   16.09 ms  decoder_full   11.85 ms
+G= 8 border=32 rows0= 96  encoder_full   16.18 ms  decoder_full   12.78 ms
+G=16 border= 0 rows0= 16  encoder_full   15.85 ms  decoder_full   11.21 ms
+G=16 border= 8 rows0= 32  encoder_full   15.53 ms  decoder_full   11.54 ms
+G=16 border=16 rows0= 48  encoder_full   16.08 ms  decoder_full   11.70 ms
+G=16 border=32 rows0= 80  encoder_full   16.01 ms  decoder_full   11.56 ms
+wrote /n/home11/zzhengg/p2_results/20261122_1716/crop_bench.csv

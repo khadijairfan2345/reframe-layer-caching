@@ -1,0 +1,399 @@
+################################################################################
+####################### VDR Dataset, number of scans: 1 ########################
+################################################################################
+
+Saving to out_p2_pipe3d10_r1
+Tuple file location: example_data/scans/config/tuples
+Dataset: vdr
+Split: example_data/scans/config/scans.txt
+Scan id: None
+Path: example_data/scans
+################################################################################
+########################## Using FeatureVolumeManager ##########################
+ Number of source views:      7  
+ Using all metadata.  
+ Number of channels:          [202, 128, 128, 1]  
+################################################################################
+
+[time_parts] hooks installed
+Reframe: True
+Reframe: pipe3d-10
+Looping over scans:   0%|          | 0/1 [00:00<?, ?it/s]Making implicit depth predictions for  garden_chair
+
+garden_chair:   0%|          | 0/296 [00:00<?, ?it/s][A
+garden_chair:   0%|          | 1/296 [00:04<22:55,  4.66s/it][A
+garden_chair:   1%|          | 2/296 [00:04<09:44,  1.99s/it][A
+garden_chair:   1%|▏         | 4/296 [00:04<03:48,  1.28it/s][A
+garden_chair:   2%|▏         | 6/296 [00:05<02:09,  2.25it/s][A
+garden_chair:   3%|▎         | 8/296 [00:05<01:24,  3.41it/s][A
+garden_chair:   3%|▎         | 10/296 [00:05<01:00,  4.72it/s][A
+garden_chair:   4%|▍         | 12/296 [00:05<00:47,  5.99it/s][A
+garden_chair:   5%|▍         | 14/296 [00:05<00:47,  5.99it/s][A
+garden_chair:   5%|▌         | 16/296 [00:05<00:38,  7.22it/s][A
+garden_chair:   6%|▌         | 18/296 [00:06<00:33,  8.41it/s][A
+garden_chair:   7%|▋         | 20/296 [00:06<00:29,  9.43it/s][A
+garden_chair:   7%|▋         | 22/296 [00:06<00:26, 10.30it/s][A
+garden_chair:   8%|▊         | 24/296 [00:06<00:25, 10.86it/s][A
+garden_chair:   9%|▉         | 26/296 [00:06<00:25, 10.56it/s][A
+garden_chair:   9%|▉         | 28/296 [00:06<00:24, 10.91it/s][A
+garden_chair:  10%|█         | 30/296 [00:07<00:23, 11.14it/s][A
+garden_chair:  11%|█         | 32/296 [00:07<00:23, 11.28it/s][A
+garden_chair:  11%|█▏        | 34/296 [00:07<00:22, 11.47it/s][A
+garden_chair:  12%|█▏        | 36/296 [00:07<00:22, 11.55it/s][A
+garden_chair:  13%|█▎        | 38/296 [00:07<00:23, 11.02it/s][A
+garden_chair:  14%|█▎        | 40/296 [00:08<00:22, 11.17it/s][A
+garden_chair:  14%|█▍        | 42/296 [00:08<00:22, 11.31it/s][A
+garden_chair:  15%|█▍        | 44/296 [00:08<00:21, 11.47it/s][A
+garden_chair:  16%|█▌        | 46/296 [00:08<00:21, 11.52it/s][A
+garden_chair:  16%|█▌        | 48/296 [00:08<00:21, 11.60it/s][A
+garden_chair:  17%|█▋        | 50/296 [00:08<00:22, 11.03it/s][A
+garden_chair:  18%|█▊        | 52/296 [00:09<00:21, 11.19it/s][A
+garden_chair:  18%|█▊        | 54/296 [00:09<00:21, 11.38it/s][A
+garden_chair:  19%|█▉        | 56/296 [00:09<00:20, 11.50it/s][A
+garden_chair:  20%|█▉        | 58/296 [00:09<00:20, 11.54it/s][A
+garden_chair:  20%|██        | 60/296 [00:09<00:20, 11.57it/s][A
+garden_chair:  21%|██        | 62/296 [00:09<00:21, 10.99it/s][A
+garden_chair:  22%|██▏       | 64/296 [00:10<00:20, 11.20it/s][A
+garden_chair:  22%|██▏       | 66/296 [00:10<00:20, 11.30it/s][A
+garden_chair:  23%|██▎       | 68/296 [00:10<00:19, 11.45it/s][A
+garden_chair:  24%|██▎       | 70/296 [00:10<00:19, 11.49it/s][A
+garden_chair:  24%|██▍       | 72/296 [00:10<00:19, 11.52it/s][A
+garden_chair:  25%|██▌       | 74/296 [00:11<00:20, 11.03it/s][A
+garden_chair:  26%|██▌       | 76/296 [00:11<00:19, 11.18it/s][A
+garden_chair:  26%|██▋       | 78/296 [00:11<00:19, 11.35it/s][A
+garden_chair:  27%|██▋       | 80/296 [00:11<00:18, 11.39it/s][A
+garden_chair:  28%|██▊       | 82/296 [00:11<00:18, 11.48it/s][A
+garden_chair:  28%|██▊       | 84/296 [00:11<00:19, 10.92it/s][A
+garden_chair:  29%|██▉       | 86/296 [00:12<00:18, 11.13it/s][A
+garden_chair:  30%|██▉       | 88/296 [00:12<00:18, 11.27it/s][A
+garden_chair:  30%|███       | 90/296 [00:12<00:18, 11.41it/s][A
+garden_chair:  31%|███       | 92/296 [00:12<00:17, 11.47it/s][A
+garden_chair:  32%|███▏      | 94/296 [00:12<00:17, 11.61it/s][A
+garden_chair:  32%|███▏      | 96/296 [00:12<00:18, 11.06it/s][A
+garden_chair:  33%|███▎      | 98/296 [00:13<00:17, 11.24it/s][A
+garden_chair:  34%|███▍      | 100/296 [00:13<00:17, 11.35it/s][A
+garden_chair:  34%|███▍      | 102/296 [00:13<00:16, 11.41it/s][A
+garden_chair:  35%|███▌      | 104/296 [00:13<00:16, 11.57it/s][A
+garden_chair:  36%|███▌      | 106/296 [00:13<00:16, 11.67it/s][A
+garden_chair:  36%|███▋      | 108/296 [00:14<00:16, 11.17it/s][A
+garden_chair:  37%|███▋      | 110/296 [00:14<00:16, 11.30it/s][A
+garden_chair:  38%|███▊      | 112/296 [00:14<00:16, 11.43it/s][A
+garden_chair:  39%|███▊      | 114/296 [00:14<00:16, 11.26it/s][A
+garden_chair:  39%|███▉      | 116/296 [00:14<00:15, 11.37it/s][A
+garden_chair:  40%|███▉      | 118/296 [00:14<00:15, 11.47it/s][A
+garden_chair:  41%|████      | 120/296 [00:15<00:16, 10.97it/s][A
+garden_chair:  41%|████      | 122/296 [00:15<00:15, 10.93it/s][A
+garden_chair:  42%|████▏     | 124/296 [00:15<00:15, 11.24it/s][A
+garden_chair:  43%|████▎     | 126/296 [00:15<00:14, 11.43it/s][A
+garden_chair:  43%|████▎     | 128/296 [00:15<00:14, 11.58it/s][A
+garden_chair:  44%|████▍     | 130/296 [00:15<00:14, 11.61it/s][A
+garden_chair:  45%|████▍     | 132/296 [00:16<00:14, 10.98it/s][A
+garden_chair:  45%|████▌     | 134/296 [00:16<00:14, 11.25it/s][A
+garden_chair:  46%|████▌     | 136/296 [00:16<00:14, 11.37it/s][A
+garden_chair:  47%|████▋     | 138/296 [00:16<00:13, 11.47it/s][A
+garden_chair:  47%|████▋     | 140/296 [00:16<00:13, 11.52it/s][A
+garden_chair:  48%|████▊     | 142/296 [00:17<00:14, 10.95it/s][A
+garden_chair:  49%|████▊     | 144/296 [00:17<00:13, 11.24it/s][A
+garden_chair:  49%|████▉     | 146/296 [00:17<00:13, 11.36it/s][A
+garden_chair:  50%|█████     | 148/296 [00:17<00:12, 11.45it/s][A
+garden_chair:  51%|█████     | 150/296 [00:17<00:12, 11.47it/s][A
+garden_chair:  51%|█████▏    | 152/296 [00:17<00:12, 11.50it/s][A
+garden_chair:  52%|█████▏    | 154/296 [00:18<00:12, 11.01it/s][A
+garden_chair:  53%|█████▎    | 156/296 [00:18<00:12, 11.09it/s][A
+garden_chair:  53%|█████▎    | 158/296 [00:18<00:12, 11.28it/s][A
+garden_chair:  54%|█████▍    | 160/296 [00:18<00:11, 11.39it/s][A
+garden_chair:  55%|█████▍    | 162/296 [00:18<00:11, 11.46it/s][A
+garden_chair:  55%|█████▌    | 164/296 [00:18<00:11, 11.56it/s][A
+garden_chair:  56%|█████▌    | 166/296 [00:19<00:11, 10.99it/s][A
+garden_chair:  57%|█████▋    | 168/296 [00:19<00:11, 11.22it/s][A
+garden_chair:  57%|█████▋    | 170/296 [00:19<00:11, 11.30it/s][A
+garden_chair:  58%|█████▊    | 172/296 [00:19<00:10, 11.36it/s][A
+garden_chair:  59%|█████▉    | 174/296 [00:19<00:10, 11.50it/s][A
+garden_chair:  59%|█████▉    | 176/296 [00:20<00:10, 11.55it/s][A
+garden_chair:  60%|██████    | 178/296 [00:20<00:10, 11.08it/s][A
+garden_chair:  61%|██████    | 180/296 [00:20<00:10, 11.26it/s][A
+garden_chair:  61%|██████▏   | 182/296 [00:20<00:10, 11.37it/s][A
+garden_chair:  62%|██████▏   | 184/296 [00:20<00:09, 11.53it/s][A
+garden_chair:  63%|██████▎   | 186/296 [00:20<00:09, 11.57it/s][A
+garden_chair:  64%|██████▎   | 188/296 [00:21<00:09, 11.62it/s][A
+garden_chair:  64%|██████▍   | 190/296 [00:21<00:09, 11.04it/s][A
+garden_chair:  65%|██████▍   | 192/296 [00:21<00:09, 11.22it/s][A
+garden_chair:  66%|██████▌   | 194/296 [00:21<00:08, 11.41it/s][A
+garden_chair:  66%|██████▌   | 196/296 [00:21<00:08, 11.41it/s][A
+garden_chair:  67%|██████▋   | 198/296 [00:21<00:08, 11.51it/s][A
+garden_chair:  68%|██████▊   | 200/296 [00:22<00:08, 10.97it/s][A
+garden_chair:  68%|██████▊   | 202/296 [00:22<00:08, 11.16it/s][A
+garden_chair:  69%|██████▉   | 204/296 [00:22<00:08, 11.36it/s][A
+garden_chair:  70%|██████▉   | 206/296 [00:22<00:07, 11.44it/s][A
+garden_chair:  70%|███████   | 208/296 [00:22<00:07, 11.53it/s][A
+garden_chair:  71%|███████   | 210/296 [00:23<00:07, 11.53it/s][A
+garden_chair:  72%|███████▏  | 212/296 [00:23<00:07, 11.06it/s][A
+garden_chair:  72%|███████▏  | 214/296 [00:23<00:07, 11.31it/s][A
+garden_chair:  73%|███████▎  | 216/296 [00:23<00:06, 11.46it/s][A
+garden_chair:  74%|███████▎  | 218/296 [00:23<00:06, 11.62it/s][A
+garden_chair:  74%|███████▍  | 220/296 [00:23<00:06, 11.67it/s][A
+garden_chair:  75%|███████▌  | 222/296 [00:24<00:06, 11.64it/s][A
+garden_chair:  76%|███████▌  | 224/296 [00:24<00:06, 11.14it/s][A
+garden_chair:  76%|███████▋  | 226/296 [00:24<00:06, 11.33it/s][A
+garden_chair:  77%|███████▋  | 228/296 [00:24<00:05, 11.48it/s][A
+garden_chair:  78%|███████▊  | 230/296 [00:24<00:05, 11.56it/s][A
+garden_chair:  78%|███████▊  | 232/296 [00:24<00:05, 11.61it/s][A
+garden_chair:  79%|███████▉  | 234/296 [00:25<00:05, 11.52it/s][A
+garden_chair:  80%|███████▉  | 236/296 [00:25<00:05, 10.74it/s][A
+garden_chair:  80%|████████  | 238/296 [00:25<00:05, 11.07it/s][A
+garden_chair:  81%|████████  | 240/296 [00:25<00:05, 11.05it/s][A
+garden_chair:  82%|████████▏ | 242/296 [00:25<00:04, 11.26it/s][A
+garden_chair:  82%|████████▏ | 244/296 [00:26<00:04, 11.47it/s][A
+garden_chair:  83%|████████▎ | 246/296 [00:26<00:04, 11.23it/s][A
+garden_chair:  84%|████████▍ | 248/296 [00:26<00:04, 10.85it/s][A
+garden_chair:  84%|████████▍ | 250/296 [00:26<00:04, 11.10it/s][A
+garden_chair:  85%|████████▌ | 252/296 [00:26<00:03, 11.28it/s][A
+garden_chair:  86%|████████▌ | 254/296 [00:26<00:03, 11.49it/s][A
+garden_chair:  86%|████████▋ | 256/296 [00:27<00:03, 11.59it/s][A
+garden_chair:  87%|████████▋ | 258/296 [00:27<00:03, 11.69it/s][A
+garden_chair:  88%|████████▊ | 260/296 [00:27<00:03, 11.11it/s][A
+garden_chair:  89%|████████▊ | 262/296 [00:27<00:03, 11.30it/s][A
+garden_chair:  89%|████████▉ | 264/296 [00:27<00:02, 11.48it/s][A
+garden_chair:  90%|████████▉ | 266/296 [00:27<00:02, 11.57it/s][A
+garden_chair:  91%|█████████ | 268/296 [00:28<00:02, 11.66it/s][A
+garden_chair:  91%|█████████ | 270/296 [00:28<00:02, 11.67it/s][A
+garden_chair:  92%|█████████▏| 272/296 [00:28<00:02, 11.09it/s][A
+garden_chair:  93%|█████████▎| 274/296 [00:28<00:01, 11.35it/s][A
+garden_chair:  93%|█████████▎| 276/296 [00:28<00:01, 11.53it/s][A
+garden_chair:  94%|█████████▍| 278/296 [00:29<00:01, 11.39it/s][A
+garden_chair:  95%|█████████▍| 280/296 [00:29<00:01, 11.57it/s][A
+garden_chair:  95%|█████████▌| 282/296 [00:29<00:01, 11.63it/s][A
+garden_chair:  96%|█████████▌| 284/296 [00:29<00:01, 10.96it/s][A
+garden_chair:  97%|█████████▋| 286/296 [00:29<00:00, 11.22it/s][A
+garden_chair:  97%|█████████▋| 288/296 [00:29<00:00, 11.27it/s][A
+garden_chair:  98%|█████████▊| 290/296 [00:30<00:00, 11.39it/s][A
+garden_chair:  99%|█████████▊| 292/296 [00:30<00:00, 11.53it/s][A
+garden_chair:  99%|█████████▉| 294/296 [00:30<00:00, 11.08it/s][A
+garden_chair: 100%|██████████| 296/296 [00:30<00:00, 11.29it/s][Agarden_chair: 100%|██████████| 296/296 [00:30<00:00,  9.63it/s]
+Looping over scans: 100%|██████████| 1/1 [00:30<00:00, 30.79s/it]Looping over scans: 100%|██████████| 1/1 [00:30<00:00, 30.79s/it]
+[pipe3d] encoder feature blocks [0, 1, 2, 4, 5]; plan for G=10:
+   frame k=0: ~  9.9 ms extra  [M B0-0]
+   frame k=1: ~  9.9 ms extra  [B1-11]
+   frame k=2: ~  9.9 ms extra  [B12-22]
+   frame k=3: ~  8.1 ms extra  [B23-31]
+   frame k=4: ~ 10.4 ms extra  [E1 E2]
+   frame k=5: ~  9.9 ms extra  [B32-42]
+   frame k=6: ~  9.9 ms extra  [B43-53]
+   frame k=7: ~  9.0 ms extra  [B54-63]
+   frame k=8: ~ 10.1 ms extra  [E3 CVN]
+   frame k=9: ~  9.2 ms extra  [D1 D2 D3 D4]
+Skipped frames: 295
+Total inference time: 5.699
+Mean inference time: 0.019
+
+[time_parts] wrote out_p2_pipe3d10_r1/part_times.csv
+
+PIPE_K0 frames: 29  (mean ms per part)
+  TOTAL               20.50
+  encoder              0.73
+  matching_model       9.05
+  cost_volume          1.46
+  cost_volume_net      0.00
+  depth_decoder        7.91
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.35
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.64
+
+PIPE_K1 frames: 30  (mean ms per part)
+  TOTAL               19.23
+  encoder              0.73
+  matching_model       0.00
+  cost_volume          9.26
+  cost_volume_net      0.00
+  depth_decoder        8.06
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.51
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.47
+
+PIPE_K2 frames: 30  (mean ms per part)
+  TOTAL               19.11
+  encoder              0.73
+  matching_model       0.00
+  cost_volume          9.24
+  cost_volume_net      0.00
+  depth_decoder        7.98
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.42
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.46
+
+PIPE_K3 frames: 30  (mean ms per part)
+  TOTAL               17.61
+  encoder              0.73
+  matching_model       0.00
+  cost_volume          7.74
+  cost_volume_net      0.00
+  depth_decoder        7.97
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.42
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.46
+
+PIPE_K4 frames: 30  (mean ms per part)
+  TOTAL               19.72
+  encoder              0.74
+  matching_model       0.00
+  cost_volume          0.00
+  cost_volume_net      0.00
+  depth_decoder        7.90
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               1.18
+  enc_L1               1.10
+  enc_L2               1.13
+  enc_L3               7.20
+  enc_L4               0.00
+  dec_row0             7.34
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other               10.38
+
+PIPE_K5 frames: 30  (mean ms per part)
+  TOTAL               19.17
+  encoder              0.73
+  matching_model       0.00
+  cost_volume          9.29
+  cost_volume_net      0.00
+  depth_decoder        7.98
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.43
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.46
+
+PIPE_K6 frames: 29  (mean ms per part)
+  TOTAL               19.17
+  encoder              0.74
+  matching_model       0.00
+  cost_volume          9.28
+  cost_volume_net      0.00
+  depth_decoder        7.98
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.43
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.47
+
+PIPE_K7 frames: 29  (mean ms per part)
+  TOTAL               18.35
+  encoder              0.73
+  matching_model       0.00
+  cost_volume          8.47
+  cost_volume_net      0.00
+  depth_decoder        7.98
+  binary_mlp           0.70
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.43
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.46
+
+PIPE_K8 frames: 29  (mean ms per part)
+  TOTAL               19.59
+  encoder              0.73
+  matching_model       0.00
+  cost_volume          0.00
+  cost_volume_net      3.13
+  depth_decoder        7.89
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               6.64
+  dec_row0             7.33
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                7.13
+
+PIPE_K9 frames: 29  (mean ms per part)
+  TOTAL               20.03
+  encoder              0.74
+  matching_model       0.00
+  cost_volume          0.00
+  cost_volume_net      0.00
+  depth_decoder       18.19
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.71
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.32
+  dec_row1             4.01
+  dec_row2             3.08
+  dec_row3             1.91
+  dec_row4             0.39
+  other                0.39

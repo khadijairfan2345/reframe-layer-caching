@@ -1,0 +1,2 @@
+every5_skip vs every5_r1 (should be 0.0):
+296 frames; max abs diff 0.0 mean of per-frame max 0.0

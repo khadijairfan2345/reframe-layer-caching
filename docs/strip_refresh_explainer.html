@@ -253,9 +253,9 @@ out = head(cache, frame)       <span class="c"># unchanged</span></pre></div>
     <div class="card">
       <h3 style="margin:0 0 4px;font-size:14px">Three ways to schedule the same refresh work</h3>
       <p style="font-size:13px;color:var(--muted);margin-bottom:10px">Each square is one strip (row) in one frame (column). Orange = recomputed that frame. The bars under each grid show that frame's cost. Illustrative: the middle strips are assumed to change fastest, as when an object moves through the center of the view.</p>
-      <div class="svgwrap"><svg id="sched" viewBox="0 0 760 690" role="img" aria-label="Three refresh schedules: periodic full refresh, partial plus full refresh, and our priority schedule with a fixed budget per frame" style="min-width:620px;width:100%;height:auto"></svg></div>
+      <div class="svgwrap"><svg id="sched" viewBox="0 0 760 690" role="img" aria-label="Three refresh schedules: periodic full refresh, our priority schedule with a fixed budget per frame, and partial plus full refresh" style="min-width:620px;width:100%;height:auto"></svg></div>
     </div>
-    <p>dLLM-Cache and ToCa refresh the important parts first, but they still fall back to a full refresh every few steps, so the spikes stay (middle grid). We keep their idea of favoring important parts and drop the full refresh: one strip per frame, chosen by importance, with a rule that no strip waits longer than K frames (bottom grid).</p>
+    <p>dLLM-Cache and ToCa refresh the important parts first, but they still fall back to a full refresh every few steps, so the spikes stay (bottom grid). We keep their idea of favoring important parts and drop the full refresh: one strip per frame, chosen by importance, with a rule that no strip waits longer than K frames (middle grid).</p>
 
     <div class="tablewrap">
       <table>
@@ -564,8 +564,8 @@ out = head(cache, frame)       <span class="c"># unchanged</span></pre></div>
     }
     const blocks = [
       ['Periodic full refresh', 'ReFrame', periodic],
-      ['Important parts + full refresh', 'dLLM-Cache / ToCa style', partial],
-      ['Ours: priority, fixed budget', 'no full refresh, max age 12', ours]
+      ['Ours: priority, fixed budget', 'no full refresh, max age 12', ours],
+      ['Important parts + full refresh', 'dLLM-Cache / ToCa style', partial]
     ];
     const css2 = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
     blocks.forEach((b, bi) => {

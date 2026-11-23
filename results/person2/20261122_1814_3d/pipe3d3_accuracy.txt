@@ -1,0 +1,8 @@
+
+out_p2_pipe3d3_r1 (Every-3)
+ age  frames  mean|diff|   %pixels flipped
+   0      99     0.01766      1.680
+   1      99     0.02116      2.028
+   2      98     0.01249      1.130
+
+wrote age_error_per_frame.csv

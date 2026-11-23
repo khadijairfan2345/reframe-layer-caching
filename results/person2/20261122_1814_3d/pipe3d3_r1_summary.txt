@@ -1,0 +1,68 @@
+Skipped frames: 295
+Total inference time: 12.083
+Mean inference time: 0.041
+
+[time_parts] wrote out_p2_pipe3d3_r1/part_times.csv
+
+PIPE_K0 frames: 98  (mean ms per part)
+  TOTAL               40.52
+  encoder              0.72
+  matching_model       8.99
+  cost_volume         21.55
+  cost_volume_net      0.00
+  depth_decoder        7.96
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.68
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.41
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.59
+
+PIPE_K1 frames: 99  (mean ms per part)
+  TOTAL               40.32
+  encoder              0.72
+  matching_model       0.00
+  cost_volume         20.24
+  cost_volume_net      0.00
+  depth_decoder        7.93
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               1.22
+  enc_L1               1.14
+  enc_L2               1.14
+  enc_L3               7.30
+  enc_L4               0.00
+  dec_row0             7.38
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other               10.73
+
+PIPE_K2 frames: 98  (mean ms per part)
+  TOTAL               41.84
+  encoder              0.72
+  matching_model       0.00
+  cost_volume         11.89
+  cost_volume_net      3.14
+  depth_decoder       18.01
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.69
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               6.83
+  dec_row0             7.32
+  dec_row1             4.01
+  dec_row2             3.05
+  dec_row3             1.81
+  dec_row4             0.34
+  other                7.38

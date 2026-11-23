@@ -1,0 +1,47 @@
+Skipped frames: 266
+Total inference time: 24.361
+Mean inference time: 0.083
+
+[time_parts] wrote out_p2_every10/part_times.csv
+
+CACHED frames: 266  (mean ms per part)
+  TOTAL               79.90
+  encoder              0.73
+  matching_model       9.00
+  cost_volume         57.57
+  cost_volume_net      3.41
+  depth_decoder        7.88
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.70
+  enc_L1               0.00
+  enc_L2               0.00
+  enc_L3               0.00
+  enc_L4               0.00
+  dec_row0             7.33
+  dec_row1             0.00
+  dec_row2             0.00
+  dec_row3             0.00
+  dec_row4             0.00
+  other                0.59
+
+REFRESH frames: 29  (mean ms per part)
+  TOTAL              106.47
+  encoder             17.19
+  matching_model       8.97
+  cost_volume         57.58
+  cost_volume_net      3.41
+  depth_decoder       18.00
+  binary_mlp           0.71
+  -- finer split (inside encoder / depth_decoder) --
+  enc_L0               0.69
+  enc_L1               1.17
+  enc_L2               1.15
+  enc_L3               7.40
+  enc_L4               6.67
+  dec_row0             7.39
+  dec_row1             4.18
+  dec_row2             2.77
+  dec_row3             1.88
+  dec_row4             0.34
+  other                0.62
